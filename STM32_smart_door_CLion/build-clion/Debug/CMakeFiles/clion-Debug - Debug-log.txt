@@ -1,0 +1,18 @@
+E:\stm32cudeclt\stm32cubeclt_1.22.0-Win-x86_64.exe\install\STM32CubeCLT_1.22.0\CMake\bin\cmake.exe -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER=E:/stm32cudeclt/stm32cubeclt_1.22.0-Win-x86_64.exe/install/STM32CubeCLT_1.22.0/GNU-tools-for-STM32/bin/arm-none-eabi-gcc.exe -DCMAKE_CXX_COMPILER=E:/stm32cudeclt/stm32cubeclt_1.22.0-Win-x86_64.exe/install/STM32CubeCLT_1.22.0/GNU-tools-for-STM32/bin/arm-none-eabi-c++.exe --preset Debug -S "D:\Jiangsu Vocational Students Skills Competition\STM32_smart_door_CLion" -B "D:\Jiangsu Vocational Students Skills Competition\STM32_smart_door_CLion\build-clion\Debug"
+-- The C compiler identification is GNU 14.3.1
+-- The ASM compiler identification is GNU
+-- Found assembler: E:/stm32cudeclt/stm32cubeclt_1.22.0-Win-x86_64.exe/install/STM32CubeCLT_1.22.0/GNU-tools-for-STM32/bin/arm-none-eabi-gcc.exe
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: E:/stm32cudeclt/stm32cubeclt_1.22.0-Win-x86_64.exe/install/STM32CubeCLT_1.22.0/GNU-tools-for-STM32/bin/arm-none-eabi-gcc.exe - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Configuring done (1.0s)
+-- Generating done (0.1s)
+CMake Warning:
+  Manually-specified variables were not used by the project:
+
+    CMAKE_CXX_COMPILER
+
+
+-- Build files have been written to: D:/Jiangsu Vocational Students Skills Competition/STM32_smart_door_CLion/build-clion/Debug

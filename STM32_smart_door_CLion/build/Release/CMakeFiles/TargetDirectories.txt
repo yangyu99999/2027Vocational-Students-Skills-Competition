@@ -1,0 +1,5 @@
+E:/chatGPT/workplace/STM32_smart_door_CLion/build/Release/CMakeFiles/smart_door.dir
+E:/chatGPT/workplace/STM32_smart_door_CLion/build/Release/CMakeFiles/flash.dir
+E:/chatGPT/workplace/STM32_smart_door_CLion/build/Release/CMakeFiles/debug_server.dir
+E:/chatGPT/workplace/STM32_smart_door_CLion/build/Release/CMakeFiles/edit_cache.dir
+E:/chatGPT/workplace/STM32_smart_door_CLion/build/Release/CMakeFiles/rebuild_cache.dir

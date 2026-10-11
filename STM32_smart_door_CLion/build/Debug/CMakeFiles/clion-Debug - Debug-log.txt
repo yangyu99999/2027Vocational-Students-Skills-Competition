@@ -1,0 +1,4 @@
+无法生成至 D:\Jiangsu Vocational Students Skills Competition\STM32_smart_door_CLion\build\Debug
+它已用于项目 E:\chatGPT\workplace\STM32_smart_door_CLion
+
+请手动删除或选择其他生成目录

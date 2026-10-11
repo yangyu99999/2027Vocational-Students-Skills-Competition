@@ -1,0 +1,21 @@
+0x080059e2 in Delay_us (us=us@entry=5) at D:/Jiangsu Vocational Students Skills Competition/STM32_smart_door_CLion/BSP/RC522/RC522.c:6
+6	    while (cycles--)
+[stm32f1x.cpu] halted due to debug-request, current mode: Thread 
+xPSR: 0x01000000 pc: 0x08006610 msp: 0x20005000
+Hardware assisted breakpoint 1 at 0x80014ca: file D:/Jiangsu Vocational Students Skills Competition/STM32_smart_door_CLion/Core/Src/main.c, line 79.
+
+Temporary breakpoint 1, main () at D:/Jiangsu Vocational Students Skills Competition/STM32_smart_door_CLion/Core/Src/main.c:79
+79	  HAL_Init();
+pc             0x80014ca           0x80014ca <main+2>
+sp             0x20004ff8          0x20004ff8
+Note: automatically using hardware breakpoints for read-only addresses.
+86	  SystemClock_Config();
+Line 86 of "D:/Jiangsu Vocational Students Skills Competition/STM32_smart_door_CLion/Core/Src/main.c" starts at address 0x80014ce <main+6> and ends at 0x80014d2 <main+10>.
+Hardware assisted breakpoint 2 at 0x8001638: file D:/Jiangsu Vocational Students Skills Competition/STM32_smart_door_CLion/Core/Src/freertos.c, line 116.
+
+Temporary breakpoint 2, StartDefaultTask (argument=0x0) at D:/Jiangsu Vocational Students Skills Competition/STM32_smart_door_CLion/Core/Src/freertos.c:116
+116	{
+$1 = 72000000
+#0  StartDefaultTask (argument=0x0) at D:/Jiangsu Vocational Students Skills Competition/STM32_smart_door_CLion/Core/Src/freertos.c:116
+#1  0x08005000 in vPortFree (pv=0x0) at D:/Jiangsu Vocational Students Skills Competition/STM32_smart_door_CLion/Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.c:312
+Backtrace stopped: previous frame identical to this frame (corrupt stack?)

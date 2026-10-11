@@ -1,0 +1,4 @@
+D:/Jiangsu Vocational Students Skills Competition/STM32_smart_door_CLion/build-clion/Debug/CMakeFiles/smart_door.dir
+D:/Jiangsu Vocational Students Skills Competition/STM32_smart_door_CLion/build-clion/Debug/CMakeFiles/flash.dir
+D:/Jiangsu Vocational Students Skills Competition/STM32_smart_door_CLion/build-clion/Debug/CMakeFiles/edit_cache.dir
+D:/Jiangsu Vocational Students Skills Competition/STM32_smart_door_CLion/build-clion/Debug/CMakeFiles/rebuild_cache.dir

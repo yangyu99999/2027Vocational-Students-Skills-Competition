@@ -1,0 +1,8 @@
+<application>
+  <component name="CPPToolchains" version="10">
+    <toolchains detectedVersion="5">
+      <toolchain name="MingGW" toolSetKind="MINGW" toolSetPath="BUNDLED_MINGW" debuggerKind="BUNDLED_GDB" />
+      <toolchain name="STM32" toolSetKind="SYSTEM_WINDOWS_TOOLSET" customCMakePath="E:\stm32cudeclt\stm32cubeclt_1.22.0-Win-x86_64.exe\install\STM32CubeCLT_1.22.0\CMake\bin\cmake.exe" customMakePath="E:\stm32cudeclt\stm32cubeclt_1.22.0-Win-x86_64.exe\install\STM32CubeCLT_1.22.0\Ninja\bin\ninja.exe" customCCompilerPath="E:\stm32cudeclt\stm32cubeclt_1.22.0-Win-x86_64.exe\install\STM32CubeCLT_1.22.0\GNU-tools-for-STM32\bin\arm-none-eabi-gcc.exe" customCXXCompilerPath="E:\stm32cudeclt\stm32cubeclt_1.22.0-Win-x86_64.exe\install\STM32CubeCLT_1.22.0\GNU-tools-for-STM32\bin\arm-none-eabi-c++.exe" debuggerKind="BUNDLED_GDB" />
+    </toolchains>
+  </component>
+</application>

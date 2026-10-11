@@ -1,0 +1,30 @@
+This GDB was configured as follows:
+   configure --host=x86_64-w64-mingw32 --target=arm-none-eabi
+	     --with-auto-load-dir=$debugdir:$datadir/auto-load
+	     --with-auto-load-safe-path=$debugdir:$datadir/auto-load
+	     --with-expat
+	     --with-gdb-datadir=/build/gnu-tools-for-stm32_14.3.rel1.20251027-0700/install-mingw/arm-none-eabi/share/gdb (relocatable)
+	     --with-jit-reader-dir=/build/gnu-tools-for-stm32_14.3.rel1.20251027-0700/install-mingw/lib/gdb (relocatable)
+	     --without-libunwind-ia64
+	     --without-lzma
+	     --without-babeltrace
+	     --without-intel-pt
+	     --without-xxhash
+	     --without-python
+	     --without-python-libdir
+	     --without-debuginfod
+	     --without-curses
+	     --without-guile
+	     --without-amd-dbgapi
+	     --disable-source-highlight
+	     --disable-threading
+	     --disable-tui
+	     --without-system-readline
+	     --with-separate-debug-dir=/build/gnu-tools-for-stm32_14.3.rel1.20251027-0700/install-mingw/lib/debug (relocatable)
+	     --with-system-gdbinit=/build/gnu-tools-for-stm32_14.3.rel1.20251027-0700/install-mingw/x86_64-w64-mingw32/arm-none-eabi/lib/gdbinit (relocatable)
+
+("Relocatable" means the directory can be moved with the GDB installation
+tree, and GDB will still find it.)
+The current OS ABI is "auto" (currently "none").
+The current OS ABI is "auto" (currently "none").
+Line 70 of "D:/Jiangsu Vocational Students Skills Competition/STM32_smart_door_CLion/Core/Src/main.c" starts at address 0x80014c8 <main> and ends at 0x80014ca <main+2>.

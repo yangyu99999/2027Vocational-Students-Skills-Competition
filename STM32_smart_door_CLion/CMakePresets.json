@@ -1,0 +1,25 @@
+{
+  "version": 6,
+  "configurePresets": [
+    {
+      "name": "Debug",
+      "generator": "Ninja",
+      "vendor": { "jetbrains.com/clion": { "toolchain": "STM32" } },
+      "binaryDir": "${sourceDir}/build-clion/Debug",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_MAKE_PROGRAM": "E:/CLion/install/CLion 2026.2.0.1/bin/ninja/win/x64/ninja.exe"
+      }
+    },
+    {
+      "name": "Release",
+      "inherits": "Debug",
+      "binaryDir": "${sourceDir}/build-clion/Release",
+      "cacheVariables": { "CMAKE_BUILD_TYPE": "Release" }
+    }
+  ],
+  "buildPresets": [
+    { "name": "Debug", "configurePreset": "Debug" },
+    { "name": "Release", "configurePreset": "Release" }
+  ]
+}

@@ -1,0 +1,5 @@
+Symbol "main" is a function at address 0x80014c8.
+Symbol "SVC_Handler" is a function at address 0x8005090.
+Symbol "PendSV_Handler" is a function at address 0x8005130.
+Symbol "SysTick_Handler" is a function at address 0x8001a18.
+Line 70 of "E:/chatGPT/workplace/STM32_smart_door_CLion/Core/Src/main.c" starts at address 0x80014c8 <main> and ends at 0x80014ca <main+2>.

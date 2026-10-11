@@ -1,0 +1,64 @@
+[1/47] Building C object CMakeFiles/smart_door.dir/Core/Src/gpio.c.obj
+[2/47] Building C object CMakeFiles/smart_door.dir/Core/Src/main.c.obj
+[3/47] Building C object CMakeFiles/smart_door.dir/Core/Src/i2c.c.obj
+[4/47] Building C object CMakeFiles/smart_door.dir/Core/Src/tim.c.obj
+[5/47] Building C object CMakeFiles/smart_door.dir/Core/Src/usart.c.obj
+[6/47] Building C object CMakeFiles/smart_door.dir/Core/Src/stm32f1xx_it.c.obj
+[7/47] Building C object CMakeFiles/smart_door.dir/Core/Src/freertos.c.obj
+[8/47] Building C object CMakeFiles/smart_door.dir/Core/Src/stm32f1xx_hal_msp.c.obj
+[9/47] Building C object CMakeFiles/smart_door.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.c.obj
+[10/47] Building C object CMakeFiles/smart_door.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.c.obj
+[11/47] Building C object CMakeFiles/smart_door.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.c.obj
+[12/47] Building C object CMakeFiles/smart_door.dir/Core/Src/app.c.obj
+[13/47] Building C object CMakeFiles/smart_door.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.c.obj
+[14/47] Building C object CMakeFiles/smart_door.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.c.obj
+[15/47] Building C object CMakeFiles/smart_door.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.c.obj
+[16/47] Building C object CMakeFiles/smart_door.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.c.obj
+[17/47] Building C object CMakeFiles/smart_door.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.c.obj
+[18/47] Building C object CMakeFiles/smart_door.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.c.obj
+[19/47] Building C object CMakeFiles/smart_door.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.c.obj
+[20/47] Building C object CMakeFiles/smart_door.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.c.obj
+[21/47] Building C object CMakeFiles/smart_door.dir/Core/Src/system_stm32f1xx.c.obj
+[22/47] Building C object CMakeFiles/smart_door.dir/Middlewares/Third_Party/FreeRTOS/Source/croutine.c.obj
+[23/47] Building C object CMakeFiles/smart_door.dir/Middlewares/Third_Party/FreeRTOS/Source/list.c.obj
+[24/47] Building C object CMakeFiles/smart_door.dir/Middlewares/Third_Party/FreeRTOS/Source/event_groups.c.obj
+[25/47] Building C object CMakeFiles/smart_door.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim_ex.c.obj
+[26/47] Building C object CMakeFiles/smart_door.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_uart.c.obj
+[27/47] Building C object CMakeFiles/smart_door.dir/Middlewares/Third_Party/FreeRTOS/Source/stream_buffer.c.obj
+[28/47] Building C object CMakeFiles/smart_door.dir/Middlewares/Third_Party/FreeRTOS/Source/queue.c.obj
+[29/47] Building C object CMakeFiles/smart_door.dir/Middlewares/Third_Party/FreeRTOS/Source/timers.c.obj
+[30/47] Building C object CMakeFiles/smart_door.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim.c.obj
+[31/47] Building C object CMakeFiles/smart_door.dir/cmake/freertos_gcc/port.c.obj
+[32/47] Building C object CMakeFiles/smart_door.dir/Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.c.obj
+[33/47] Building C object CMakeFiles/smart_door.dir/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_i2c.c.obj
+[34/47] Building C object CMakeFiles/smart_door.dir/Middlewares/Third_Party/FreeRTOS/Source/tasks.c.obj
+[35/47] Building C object CMakeFiles/smart_door.dir/BSP/BEEP/BEEP.c.obj
+[36/47] Building C object CMakeFiles/smart_door.dir/BSP/BT/BT.c.obj
+[37/47] Building C object CMakeFiles/smart_door.dir/BSP/KEY/KEY.c.obj
+[38/47] Building C object CMakeFiles/smart_door.dir/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.c.obj
+[39/47] Building C object CMakeFiles/smart_door.dir/BSP/SHAKE/SHAKE.c.obj
+[40/47] Building ASM object CMakeFiles/smart_door.dir/Drivers/CMSIS/Device/ST/STM32F1xx/Source/Templates/gcc/startup_stm32f103xb.s.obj
+[41/47] Building C object CMakeFiles/smart_door.dir/BSP/OLED/oled.c.obj
+[42/47] Building C object CMakeFiles/smart_door.dir/BSP/FLASH/FLASH.c.obj
+[43/47] Building C object CMakeFiles/smart_door.dir/BSP/RC522/RC522.c.obj
+[44/47] Building C object CMakeFiles/smart_door.dir/BSP/SERVO/servo.c.obj
+[45/47] Building C object CMakeFiles/smart_door.dir/BSP/JQ8900/JQ8900.c.obj
+[46/47] Building C object CMakeFiles/smart_door.dir/BSP/FINGER/FINGER.c.obj
+[47/47] Linking C executable smart_door.elf
+E:/stm32cudeclt/stm32cubeclt_1.22.0-Win-x86_64.exe/install/STM32CubeCLT_1.22.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/bin/ld.exe: E:/stm32cudeclt/stm32cubeclt_1.22.0-Win-x86_64.exe/install/STM32CubeCLT_1.22.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libc_nano.a(libc_a-closer.o): in function `_close_r':
+(.text._close_r+0xc): warning: _close is not implemented and will always fail
+E:/stm32cudeclt/stm32cubeclt_1.22.0-Win-x86_64.exe/install/STM32CubeCLT_1.22.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/bin/ld.exe: E:/stm32cudeclt/stm32cubeclt_1.22.0-Win-x86_64.exe/install/STM32CubeCLT_1.22.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libc_nano.a(libc_a-closer.o): note: the message above does not take linker garbage collection into account
+E:/stm32cudeclt/stm32cubeclt_1.22.0-Win-x86_64.exe/install/STM32CubeCLT_1.22.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/bin/ld.exe: E:/stm32cudeclt/stm32cubeclt_1.22.0-Win-x86_64.exe/install/STM32CubeCLT_1.22.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libc_nano.a(libc_a-lseekr.o): in function `_lseek_r':
+(.text._lseek_r+0x10): warning: _lseek is not implemented and will always fail
+E:/stm32cudeclt/stm32cubeclt_1.22.0-Win-x86_64.exe/install/STM32CubeCLT_1.22.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/bin/ld.exe: E:/stm32cudeclt/stm32cubeclt_1.22.0-Win-x86_64.exe/install/STM32CubeCLT_1.22.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libc_nano.a(libc_a-lseekr.o): note: the message above does not take linker garbage collection into account
+E:/stm32cudeclt/stm32cubeclt_1.22.0-Win-x86_64.exe/install/STM32CubeCLT_1.22.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/bin/ld.exe: E:/stm32cudeclt/stm32cubeclt_1.22.0-Win-x86_64.exe/install/STM32CubeCLT_1.22.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libc_nano.a(libc_a-readr.o): in function `_read_r':
+(.text._read_r+0x10): warning: _read is not implemented and will always fail
+E:/stm32cudeclt/stm32cubeclt_1.22.0-Win-x86_64.exe/install/STM32CubeCLT_1.22.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/bin/ld.exe: E:/stm32cudeclt/stm32cubeclt_1.22.0-Win-x86_64.exe/install/STM32CubeCLT_1.22.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libc_nano.a(libc_a-readr.o): note: the message above does not take linker garbage collection into account
+E:/stm32cudeclt/stm32cubeclt_1.22.0-Win-x86_64.exe/install/STM32CubeCLT_1.22.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/bin/ld.exe: E:/stm32cudeclt/stm32cubeclt_1.22.0-Win-x86_64.exe/install/STM32CubeCLT_1.22.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libc_nano.a(libc_a-writer.o): in function `_write_r':
+(.text._write_r+0x10): warning: _write is not implemented and will always fail
+E:/stm32cudeclt/stm32cubeclt_1.22.0-Win-x86_64.exe/install/STM32CubeCLT_1.22.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/bin/ld.exe: E:/stm32cudeclt/stm32cubeclt_1.22.0-Win-x86_64.exe/install/STM32CubeCLT_1.22.0/GNU-tools-for-STM32/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libc_nano.a(libc_a-writer.o): note: the message above does not take linker garbage collection into account
+Memory region         Used Size  Region Size  %age Used
+           FLASH:       27832 B        63 KB     43.14%
+             RAM:       18712 B        20 KB     91.37%
+   text	   data	    bss	    dec	    hex	filename
+  27732	     96	  18616	  46444	   b56c	E:/chatGPT/workplace/STM32_smart_door_CLion/build/Release/smart_door.elf
