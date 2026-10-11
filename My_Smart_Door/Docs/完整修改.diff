@@ -1,0 +1,865 @@
+--- original/Core/Src/gpio.c
++++ updated/Core/Src/gpio.c
+@@ -62,21 +62,21 @@
+ 
+   /*Configure GPIO pins : OLED_SDA_Pin OLED_SCL_Pin */
+   GPIO_InitStruct.Pin = OLED_SDA_Pin|OLED_SCL_Pin;
+-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+-  GPIO_InitStruct.Pull = GPIO_NOPULL;
+-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
++  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
++  GPIO_InitStruct.Pull = GPIO_PULLUP;
++  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+ 
+-  /*Configure GPIO pins : BEEP_Pin ROW1_Pin */
+-  GPIO_InitStruct.Pin = BEEP_Pin|ROW1_Pin;
++  /*Configure GPIO pins : BEEP_Pin */
++  GPIO_InitStruct.Pin = BEEP_Pin;
+   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+   GPIO_InitStruct.Pull = GPIO_NOPULL;
+   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+ 
+-  /*Configure GPIO pins : ROW2_Pin ROW3_Pin ROW4_Pin RFID_RST_Pin
++  /*Configure GPIO pins : RFID_RST_Pin
+                            RFIO_MOSI_Pin */
+-  GPIO_InitStruct.Pin = ROW2_Pin|ROW3_Pin|ROW4_Pin|RFID_RST_Pin
++  GPIO_InitStruct.Pin = RFID_RST_Pin
+                           |RFIO_MOSI_Pin;
+   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+   GPIO_InitStruct.Pull = GPIO_NOPULL;
+@@ -90,10 +90,17 @@
+   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_MEDIUM;
+   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+ 
++  /* 行开漏：非扫描行写SET释放，当前行拉低；多键不会短接推挽输出。 */
++  GPIO_InitStruct.Pin = ROW1_Pin|ROW2_Pin|ROW3_Pin|ROW4_Pin;
++  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
++  GPIO_InitStruct.Pull = GPIO_NOPULL;
++  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
++  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
++
+   /*Configure GPIO pins : COL1_Pin COL2_Pin COL3_Pin COL4_Pin */
+   GPIO_InitStruct.Pin = COL1_Pin|COL2_Pin|COL3_Pin|COL4_Pin;
+   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+-  GPIO_InitStruct.Pull = GPIO_NOPULL;
++  GPIO_InitStruct.Pull = GPIO_PULLUP;
+   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+ 
+   /*Configure GPIO pin : RFID_MISO_Pin */
+--- original/Core/Src/tim.c
++++ updated/Core/Src/tim.c
+@@ -41,9 +41,9 @@
+ 
+   /* USER CODE END TIM4_Init 1 */
+   htim4.Instance = TIM4;
+-  htim4.Init.Prescaler = 0;
++  htim4.Init.Prescaler = 71; /* TIM4=72MHz，计数单位1us */
+   htim4.Init.CounterMode = TIM_COUNTERMODE_UP;
+-  htim4.Init.Period = 65535;
++  htim4.Init.Period = 19999; /* 20ms周期，50Hz */
+   htim4.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+   htim4.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+   if (HAL_TIM_PWM_Init(&htim4) != HAL_OK)
+@@ -57,7 +57,7 @@
+     Error_Handler();
+   }
+   sConfigOC.OCMode = TIM_OCMODE_PWM1;
+-  sConfigOC.Pulse = 0;
++  sConfigOC.Pulse = 1500; /* 启动PWM前预置中位 */
+   sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
+   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
+   if (HAL_TIM_PWM_ConfigChannel(&htim4, &sConfigOC, TIM_CHANNEL_3) != HAL_OK)
+--- original/Core/Src/usart.c
++++ updated/Core/Src/usart.c
+@@ -99,7 +99,7 @@
+ 
+   /* USER CODE END USART3_Init 1 */
+   huart3.Instance = USART3;
+-  huart3.Init.BaudRate = 115200;
++  huart3.Init.BaudRate = 9600; /* small.HMI启动脚本使用9600 */
+   huart3.Init.WordLength = UART_WORDLENGTH_8B;
+   huart3.Init.StopBits = UART_STOPBITS_1;
+   huart3.Init.Parity = UART_PARITY_NONE;
+--- original/My_Smart_Door.ioc
++++ updated/My_Smart_Door.ioc
+@@ -103,27 +103,27 @@
+ PA2.Signal=USART2_TX
+ PA3.Mode=Asynchronous
+ PA3.Signal=USART2_RX
+-PA4.GPIOParameters=GPIO_Speed,PinState,GPIO_Label
++PA4.GPIOParameters=GPIO_Speed,PinState,GPIO_Label,GPIO_Mode
+ PA4.GPIO_Label=ROW1
+-PA4.GPIO_Speed=GPIO_SPEED_FREQ_HIGH
++PA4.GPIO_Speed=GPIO_SPEED_FREQ_LOW
+ PA4.Locked=true
+ PA4.PinState=GPIO_PIN_SET
+ PA4.Signal=GPIO_Output
+-PA5.GPIOParameters=GPIO_Speed,PinState,GPIO_Label
++PA5.GPIOParameters=GPIO_Speed,PinState,GPIO_Label,GPIO_Mode
+ PA5.GPIO_Label=ROW2
+-PA5.GPIO_Speed=GPIO_SPEED_FREQ_HIGH
++PA5.GPIO_Speed=GPIO_SPEED_FREQ_LOW
+ PA5.Locked=true
+ PA5.PinState=GPIO_PIN_SET
+ PA5.Signal=GPIO_Output
+-PA6.GPIOParameters=GPIO_Speed,PinState,GPIO_Label
++PA6.GPIOParameters=GPIO_Speed,PinState,GPIO_Label,GPIO_Mode
+ PA6.GPIO_Label=ROW3
+-PA6.GPIO_Speed=GPIO_SPEED_FREQ_HIGH
++PA6.GPIO_Speed=GPIO_SPEED_FREQ_LOW
+ PA6.Locked=true
+ PA6.PinState=GPIO_PIN_SET
+ PA6.Signal=GPIO_Output
+-PA7.GPIOParameters=GPIO_Speed,PinState,GPIO_Label
++PA7.GPIOParameters=GPIO_Speed,PinState,GPIO_Label,GPIO_Mode
+ PA7.GPIO_Label=ROW4
+-PA7.GPIO_Speed=GPIO_SPEED_FREQ_HIGH
++PA7.GPIO_Speed=GPIO_SPEED_FREQ_LOW
+ PA7.Locked=true
+ PA7.PinState=GPIO_PIN_SET
+ PA7.Signal=GPIO_Output
+@@ -147,22 +147,18 @@
+ PB11.Signal=USART3_RX
+ PB12.GPIOParameters=GPIO_PuPd,GPIO_Label
+ PB12.GPIO_Label=COL1
+-PB12.GPIO_PuPd=GPIO_PULLUP
+ PB12.Locked=true
+ PB12.Signal=GPIO_Input
+ PB13.GPIOParameters=GPIO_PuPd,GPIO_Label
+ PB13.GPIO_Label=COL2
+-PB13.GPIO_PuPd=GPIO_PULLUP
+ PB13.Locked=true
+ PB13.Signal=GPIO_Input
+ PB14.GPIOParameters=GPIO_PuPd,GPIO_Label
+ PB14.GPIO_Label=COL3
+-PB14.GPIO_PuPd=GPIO_PULLUP
+ PB14.Locked=true
+ PB14.Signal=GPIO_Input
+ PB15.GPIOParameters=GPIO_PuPd,GPIO_Label
+ PB15.GPIO_Label=COL4
+-PB15.GPIO_PuPd=GPIO_PULLUP
+ PB15.Locked=true
+ PB15.Signal=GPIO_Input
+ PB3.GPIOParameters=GPIO_Speed,PinState,GPIO_Label
+@@ -184,15 +180,15 @@
+ PB7.Signal=I2C1_SDA
+ PB8.Locked=true
+ PB8.Signal=S_TIM4_CH3
+-PC14-OSC32_IN.GPIOParameters=GPIO_Speed,PinState,GPIO_Label
++PC14-OSC32_IN.GPIOParameters=GPIO_Speed,PinState,GPIO_Label,GPIO_Mode,GPIO_PuPd
+ PC14-OSC32_IN.GPIO_Label=OLED_SDA
+-PC14-OSC32_IN.GPIO_Speed=GPIO_SPEED_FREQ_HIGH
++PC14-OSC32_IN.GPIO_Speed=GPIO_SPEED_FREQ_LOW
+ PC14-OSC32_IN.Locked=true
+ PC14-OSC32_IN.PinState=GPIO_PIN_SET
+ PC14-OSC32_IN.Signal=GPIO_Output
+-PC15-OSC32_OUT.GPIOParameters=GPIO_Speed,PinState,GPIO_Label
++PC15-OSC32_OUT.GPIOParameters=GPIO_Speed,PinState,GPIO_Label,GPIO_Mode,GPIO_PuPd
+ PC15-OSC32_OUT.GPIO_Label=OLED_SCL
+-PC15-OSC32_OUT.GPIO_Speed=GPIO_SPEED_FREQ_HIGH
++PC15-OSC32_OUT.GPIO_Speed=GPIO_SPEED_FREQ_LOW
+ PC15-OSC32_OUT.Locked=true
+ PC15-OSC32_OUT.PinState=GPIO_PIN_SET
+ PC15-OSC32_OUT.Signal=GPIO_Output
+@@ -267,13 +263,30 @@
+ SH.S_TIM4_CH3.0=TIM4_CH3,PWM Generation3 CH3
+ SH.S_TIM4_CH3.ConfNb=1
+ TIM4.Channel-PWM\ Generation3\ CH3=TIM_CHANNEL_3
+-TIM4.IPParameters=Channel-PWM Generation3 CH3
++TIM4.IPParameters=Channel-PWM Generation3 CH3,Prescaler,Period,Pulse-PWM Generation3 CH3
+ USART1.IPParameters=VirtualMode
+ USART1.VirtualMode=VM_ASYNC
+ USART2.IPParameters=VirtualMode
+ USART2.VirtualMode=VM_ASYNC
+-USART3.IPParameters=VirtualMode
++USART3.IPParameters=VirtualMode,BaudRate
+ USART3.VirtualMode=VM_ASYNC
+ VP_SYS_VS_Systick.Mode=SysTick
+ VP_SYS_VS_Systick.Signal=SYS_VS_Systick
+ board=custom
++
++PA4.GPIO_Mode=GPIO_MODE_OUTPUT_OD
++PA5.GPIO_Mode=GPIO_MODE_OUTPUT_OD
++PA6.GPIO_Mode=GPIO_MODE_OUTPUT_OD
++PA7.GPIO_Mode=GPIO_MODE_OUTPUT_OD
++PB12.GPIO_PuPd=GPIO_PULLUP
++PB13.GPIO_PuPd=GPIO_PULLUP
++PB14.GPIO_PuPd=GPIO_PULLUP
++PB15.GPIO_PuPd=GPIO_PULLUP
++PC14-OSC32_IN.GPIO_Mode=GPIO_MODE_OUTPUT_OD
++PC14-OSC32_IN.GPIO_PuPd=GPIO_PULLUP
++PC15-OSC32_OUT.GPIO_Mode=GPIO_MODE_OUTPUT_OD
++PC15-OSC32_OUT.GPIO_PuPd=GPIO_PULLUP
++TIM4.Prescaler=71
++TIM4.Period=19999
++TIM4.Pulse-PWM\ Generation3\ CH3=1500
++USART3.BaudRate=9600
+--- original/MDK-ARM/BSP/KEY/KEY.c
++++ updated/MDK-ARM/BSP/KEY/KEY.c
+@@ -1,65 +1,52 @@
+ #include "KEY.h"
++#define KEY_DEBOUNCE_MS 20U
++static uint16_t s_candidate;
++static uint16_t s_stable;
++static uint32_t s_changed_at;
+ 
++/* 功能：释放所有行并复位消抖；参数/返回：无；条件：GPIO初始化后调用。 */
+ void KEY_Init(void)
+ {
+-  HAL_GPIO_WritePin(ROW1_GPIO_Port, ROW1_Pin, GPIO_PIN_SET);
+-  HAL_GPIO_WritePin(ROW2_GPIO_Port, ROW2_Pin, GPIO_PIN_SET);
+-  HAL_GPIO_WritePin(ROW3_GPIO_Port, ROW3_Pin, GPIO_PIN_SET);
+-  HAL_GPIO_WritePin(ROW4_GPIO_Port, ROW4_Pin, GPIO_PIN_SET);
++  HAL_GPIO_WritePin(GPIOA, ROW1_Pin|ROW2_Pin|ROW3_Pin|ROW4_Pin, GPIO_PIN_SET);
++  s_candidate = 0U;
++  s_stable = 0U;
++  s_changed_at = HAL_GetTick();
+ }
+ 
++/* 功能：扫描原始16位键值；返回：每一位对应一个键；条件：行开漏、列上拉。
++ * 切换行后留出约数微秒建立时间，实际时间需逻辑分析仪确认。 */
+ uint16_t KEY_ScanMatrix(void)
+ {
+-  uint16_t mask = 0;
+-
+-  HAL_GPIO_WritePin(ROW1_GPIO_Port, ROW1_Pin, GPIO_PIN_RESET);
+-  if (HAL_GPIO_ReadPin(COL1_GPIO_Port, COL1_Pin) == GPIO_PIN_RESET) mask |= (1U << 0);
+-  if (HAL_GPIO_ReadPin(COL2_GPIO_Port, COL2_Pin) == GPIO_PIN_RESET) mask |= (1U << 1);
+-  if (HAL_GPIO_ReadPin(COL3_GPIO_Port, COL3_Pin) == GPIO_PIN_RESET) mask |= (1U << 2);
+-  if (HAL_GPIO_ReadPin(COL4_GPIO_Port, COL4_Pin) == GPIO_PIN_RESET) mask |= (1U << 3);
+-  HAL_GPIO_WritePin(ROW1_GPIO_Port, ROW1_Pin, GPIO_PIN_SET);
+-
+-  HAL_GPIO_WritePin(ROW2_GPIO_Port, ROW2_Pin, GPIO_PIN_RESET);
+-  if (HAL_GPIO_ReadPin(COL1_GPIO_Port, COL1_Pin) == GPIO_PIN_RESET) mask |= (1U << 4);
+-  if (HAL_GPIO_ReadPin(COL2_GPIO_Port, COL2_Pin) == GPIO_PIN_RESET) mask |= (1U << 5);
+-  if (HAL_GPIO_ReadPin(COL3_GPIO_Port, COL3_Pin) == GPIO_PIN_RESET) mask |= (1U << 6);
+-  if (HAL_GPIO_ReadPin(COL4_GPIO_Port, COL4_Pin) == GPIO_PIN_RESET) mask |= (1U << 7);
+-  HAL_GPIO_WritePin(ROW2_GPIO_Port, ROW2_Pin, GPIO_PIN_SET);
+-
+-  HAL_GPIO_WritePin(ROW3_GPIO_Port, ROW3_Pin, GPIO_PIN_RESET);
+-  if (HAL_GPIO_ReadPin(COL1_GPIO_Port, COL1_Pin) == GPIO_PIN_RESET) mask |= (1U << 8);
+-  if (HAL_GPIO_ReadPin(COL2_GPIO_Port, COL2_Pin) == GPIO_PIN_RESET) mask |= (1U << 9);
+-  if (HAL_GPIO_ReadPin(COL3_GPIO_Port, COL3_Pin) == GPIO_PIN_RESET) mask |= (1U << 10);
+-  if (HAL_GPIO_ReadPin(COL4_GPIO_Port, COL4_Pin) == GPIO_PIN_RESET) mask |= (1U << 11);
+-  HAL_GPIO_WritePin(ROW3_GPIO_Port, ROW3_Pin, GPIO_PIN_SET);
+-
+-  HAL_GPIO_WritePin(ROW4_GPIO_Port, ROW4_Pin, GPIO_PIN_RESET);
+-  if (HAL_GPIO_ReadPin(COL1_GPIO_Port, COL1_Pin) == GPIO_PIN_RESET) mask |= (1U << 12);
+-  if (HAL_GPIO_ReadPin(COL2_GPIO_Port, COL2_Pin) == GPIO_PIN_RESET) mask |= (1U << 13);
+-  if (HAL_GPIO_ReadPin(COL3_GPIO_Port, COL3_Pin) == GPIO_PIN_RESET) mask |= (1U << 14);
+-  if (HAL_GPIO_ReadPin(COL4_GPIO_Port, COL4_Pin) == GPIO_PIN_RESET) mask |= (1U << 15);
+-  HAL_GPIO_WritePin(ROW4_GPIO_Port, ROW4_Pin, GPIO_PIN_SET);
+-
++  static const uint16_t rows[4] = {ROW1_Pin,ROW2_Pin,ROW3_Pin,ROW4_Pin};
++  static const uint16_t cols[4] = {COL1_Pin,COL2_Pin,COL3_Pin,COL4_Pin};
++  uint16_t mask = 0U;
++  uint8_t r,c;
++  volatile uint32_t settle;
++  for (r=0U;r<4U;r++)
++  {
++    HAL_GPIO_WritePin(GPIOA, rows[r], GPIO_PIN_RESET);
++    for(settle=0U;settle<128U;settle++) { __NOP(); }
++    for(c=0U;c<4U;c++)
++      if(HAL_GPIO_ReadPin(GPIOB,cols[c])==GPIO_PIN_RESET)
++        mask |= (uint16_t)(1U << (r*4U+c));
++    HAL_GPIO_WritePin(GPIOA, rows[r], GPIO_PIN_SET);
++  }
+   return mask;
+ }
+ 
++/* 功能：返回一次稳定按下事件；返回：1..16，0无事件；每1..5ms调用。
++ * 同时多键视为无效；必须稳定松开后才接受下一次按下，避免组合键误触发。 */
+ uint8_t KEY_Scan(void)
+ {
+-  uint16_t mask = KEY_ScanMatrix();
++  uint16_t mask=KEY_ScanMatrix();
++  uint32_t now=HAL_GetTick();
+   uint8_t i;
+-
+-  if (mask == 0)
+-  {
+-    return 0;
+-  }
+-
+-  for (i = 0; i < 16; i++)
+-  {
+-    if (mask & (1U << i))
+-    {
+-      return (uint8_t)(i + 1U);
+-    }
+-  }
+-
+-  return 0;
++  if(mask!=s_candidate) { s_candidate=mask; s_changed_at=now; }
++  if((uint32_t)(now-s_changed_at)<KEY_DEBOUNCE_MS || mask==s_stable) return 0U;
++  if(mask==0U) { s_stable=0U; return 0U; }
++  if(s_stable!=0U) return 0U;
++  s_stable=mask;
++  if((mask & (uint16_t)(mask-1U))!=0U) return 0U;
++  for(i=0U;i<16U;i++) if(mask & (1U<<i)) return (uint8_t)(i+1U);
++  return 0U;
+ }
+--- original/MDK-ARM/BSP/SERVO/servo.c
++++ updated/MDK-ARM/BSP/SERVO/servo.c
+@@ -1,39 +1,34 @@
+-//定时器产生20ms的PWM波
+-//0.5ms全速正传
+-//1.5ms停止
+-//2.5ms全速反转
+-
+ #include "servo.h"
+-
+-void Servo_Forward(TIM_HandleTypeDef *htim, uint32_t channel)
++static HAL_StatusTypeDef s_status=HAL_OK;
++/* 功能：普通SG90位置控制；参数：TIM4/CH3及0..180度；返回：HAL状态。
++ * 条件：72MHz定时器时钟，PSC=71、ARR=19999；首次上板先卸下舵盘验证。 */
++HAL_StatusTypeDef Servo_SetAngle(TIM_HandleTypeDef *htim,uint32_t channel,uint16_t angle)
+ {
+-  if (htim == NULL)
+-  {
+-    return;
+-  }
+-
+-  HAL_TIM_PWM_Start(htim, channel);
+-  __HAL_TIM_SET_COMPARE(htim, channel, SERVO_FORWARD_PULSE_US);
++  uint32_t pulse;
++  if(htim==NULL || htim->Instance!=TIM4 || channel!=TIM_CHANNEL_3 || angle>180U)
++    return (s_status=HAL_ERROR);
++  if(htim->Instance->PSC!=71U || htim->Instance->ARR!=19999U)
++    return (s_status=HAL_ERROR);
++  pulse=SERVO_MIN_PULSE_US+((SERVO_MAX_PULSE_US-SERVO_MIN_PULSE_US)*angle)/180U;
++  __HAL_TIM_SET_COMPARE(htim,channel,pulse);
++  /* 已启动时只更新CCR，重复Start会被本版HAL判为BUSY。 */
++  if(HAL_TIM_GetChannelState(htim,channel)==HAL_TIM_CHANNEL_STATE_BUSY)
++    s_status=HAL_OK;
++  else
++    s_status=HAL_TIM_PWM_Start(htim,channel);
++  return s_status;
+ }
+-
+-void Servo_Reverse(TIM_HandleTypeDef *htim, uint32_t channel)
++/* 功能：关闭PWM；返回：HAL状态；注意：关闭后舵机不保证保持位置。 */
++HAL_StatusTypeDef Servo_Disable(TIM_HandleTypeDef *htim,uint32_t channel)
+ {
+-  if (htim == NULL)
+-  {
+-    return;
+-  }
+-
+-  HAL_TIM_PWM_Start(htim, channel);
+-  __HAL_TIM_SET_COMPARE(htim, channel, SERVO_REVERSE_PULSE_US);
++  if(htim==NULL || htim->Instance!=TIM4 || channel!=TIM_CHANNEL_3) return (s_status=HAL_ERROR);
++  return (s_status=HAL_TIM_PWM_Stop(htim,channel));
+ }
+-
+-void Servo_Stop(TIM_HandleTypeDef *htim, uint32_t channel)
+-{
+-  if (htim == NULL)
+-  {
+-    return;
+-  }
+-
+-  HAL_TIM_PWM_Start(htim, channel);
+-  __HAL_TIM_SET_COMPARE(htim, channel, SERVO_STOP_PULSE_US);
+-}
++/* 功能：读取最近控制状态；参数：无；返回：HAL状态。 */
++HAL_StatusTypeDef Servo_GetStatus(void) { return s_status; }
++/* 功能：兼容旧正转调用，定位180度；返回：无，状态由GetStatus读取。 */
++void Servo_Forward(TIM_HandleTypeDef *htim,uint32_t channel) { (void)Servo_SetAngle(htim,channel,180U); }
++/* 功能：兼容旧反转调用，定位0度；返回：无，状态由GetStatus读取。 */
++void Servo_Reverse(TIM_HandleTypeDef *htim,uint32_t channel) { (void)Servo_SetAngle(htim,channel,0U); }
++/* 功能：兼容旧停止调用，定位90度；返回：无，非关闭PWM。 */
++void Servo_Stop(TIM_HandleTypeDef *htim,uint32_t channel) { (void)Servo_SetAngle(htim,channel,90U); }
+--- original/MDK-ARM/BSP/SERVO/servo.h
++++ updated/MDK-ARM/BSP/SERVO/servo.h
+@@ -1,22 +1,17 @@
+ #ifndef __SERVO_H
+ #define __SERVO_H
+-
+-#ifdef __cplusplus
+-extern "C" {
++#include "tim.h"
++/* 普通SG90保守采用1..2ms；90度为1.5ms，实物角度和机械边界须确认。 */
++#define SERVO_MIN_PULSE_US 1000U
++#define SERVO_MAX_PULSE_US 2000U
++#define SERVO_STOP_PULSE_US 1500U
++#define SERVO_FORWARD_PULSE_US 2000U
++#define SERVO_REVERSE_PULSE_US 1000U
++HAL_StatusTypeDef Servo_SetAngle(TIM_HandleTypeDef *htim,uint32_t channel,uint16_t angle);
++HAL_StatusTypeDef Servo_Disable(TIM_HandleTypeDef *htim,uint32_t channel);
++HAL_StatusTypeDef Servo_GetStatus(void);
++/* 兼容旧接口：Forward=180度，Reverse=0度，Stop=90度；并非连续旋转停止。 */
++void Servo_Forward(TIM_HandleTypeDef *htim,uint32_t channel);
++void Servo_Reverse(TIM_HandleTypeDef *htim,uint32_t channel);
++void Servo_Stop(TIM_HandleTypeDef *htim,uint32_t channel);
+ #endif
+-
+-#include "tim.h"
+-
+-#define SERVO_STOP_PULSE_US     1500u
+-#define SERVO_FORWARD_PULSE_US  2000u
+-#define SERVO_REVERSE_PULSE_US  1000u
+-
+-void Servo_Forward(TIM_HandleTypeDef *htim, uint32_t channel);
+-void Servo_Reverse(TIM_HandleTypeDef *htim, uint32_t channel);
+-void Servo_Stop(TIM_HandleTypeDef *htim, uint32_t channel);
+-
+-#ifdef __cplusplus
+-}
+-#endif
+-
+-#endif
+--- original/MDK-ARM/BSP/TJC/TJC.c
++++ updated/MDK-ARM/BSP/TJC/TJC.c
+@@ -1,60 +1,51 @@
+ #include "TJC.h"
+ #include "usart.h"
+-
+-//使用USART1，huart1在usart.c中由CubeMX生成
+-extern UART_HandleTypeDef huart3;
+-
+-/**
+- * @brief 初始化串口屏
+- */
+-void bsp_tjc_init(void)
++#include <stdio.h>
++#include <string.h>
++static HAL_StatusTypeDef s_status=HAL_OK;
++/* 功能：发送标准陶晶驰指令和3个FF；参数：指令；返回：内部状态。
++ * 条件：USART3=9600，屏幕已上电；这里只检查串口发送，不代表屏幕执行成功。 */
++static void TJC_Send(const char *command)
+ {
+-    bsp_tjc_set_page(TJC_PAGE_PASSWORD);
++  uint8_t buf[96];
++  size_t len;
++  if(command==NULL) { s_status=HAL_ERROR; return; }
++  len=strlen(command);
++  if(len>sizeof(buf)-3U) { s_status=HAL_ERROR; return; }
++  memcpy(buf,command,len);
++  buf[len++]=0xFFU; buf[len++]=0xFFU; buf[len++]=0xFFU;
++  s_status=HAL_UART_Transmit(&huart3,buf,(uint16_t)len,120U);
+ }
+-
+-/**
+- * @brief 切换页面指令 0x55 0xAA 0x01 page
+- */
++/* 功能：切至small.HMI的page0；参数/返回：无；条件：屏幕启动完成后调用。 */
++void bsp_tjc_init(void) { bsp_tjc_set_page(TJC_PAGE_HOME); }
++/* 功能：切页；参数：仅支持当前HMI的0页；返回：状态由get_status获取。 */
+ void bsp_tjc_set_page(uint8_t page_id)
+ {
+-    uint8_t buf[4] = {0x55, 0xAA, 0x01, page_id};
+-    HAL_UART_Transmit(&huart3, buf, sizeof(buf), 100);
++  if(page_id!=0U) { s_status=HAL_ERROR; return; }
++  TJC_Send("page 0");
+ }
+-
+-/**
+- * @brief 修改文本内容 0x55 0xAA 0x02 id +字符串
+- */
+-void bsp_tjc_show_str(uint8_t ctrl_id, char *str)
++/* 功能：在t0显示字符串；ctrl_id=0，兼容层不把数值ID猜作控件名。
++ * 参数：最多64个ASCII字符；拒绝引号、反斜线和控制字符以防破坏命令。 */
++void bsp_tjc_show_str(uint8_t ctrl_id,char *str)
+ {
+-    uint8_t buf[80];
+-    uint16_t idx = 0;
+-    buf[idx++] = 0x55;
+-    buf[idx++] = 0xAA;
+-    buf[idx++] = 0x02;
+-    buf[idx++] = ctrl_id;
+-
+-    while(*str != '\0' && idx < 78)
+-    {
+-        buf[idx++] = *str++;
+-    }
+-    HAL_UART_Transmit(&huart3, buf, idx, 100);
++  char command[80];
++  size_t i;
++  if(ctrl_id!=TJC_TEXT_CONTROL || str==NULL) { s_status=HAL_ERROR; return; }
++  for(i=0U;str[i]!='\0';i++)
++    if(i>=64U || str[i]<' ' || (uint8_t)str[i]>126U || str[i]=='"' || str[i]=='\\')
++      { s_status=HAL_ERROR; return; }
++  (void)snprintf(command,sizeof(command),"t0.txt=\"%s\"",str);
++  TJC_Send(command);
+ }
+-
+-/**
+- * @brief 清空文本
+- */
+-void bsp_tjc_clear_str(uint8_t ctrl_id)
++/* 功能：清空t0；参数：逻辑控件号0；返回：无。 */
++void bsp_tjc_clear_str(uint8_t ctrl_id) { bsp_tjc_show_str(ctrl_id,""); }
++/* 功能：设置t0的RGB565文字颜色；参数：逻辑控件号0、颜色；返回：无。 */
++void bsp_tjc_set_pco(uint8_t ctrl_id,uint16_t color)
+ {
+-    bsp_tjc_show_str(ctrl_id, "");
++  char command[32];
++  if(ctrl_id!=TJC_TEXT_CONTROL) { s_status=HAL_ERROR; return; }
++  (void)snprintf(command,sizeof(command),"t0.pco=%u",(unsigned int)color);
++  TJC_Send(command);
+ }
+-
+-/**
+- * @brief 修改文字颜色 pco属性 0x22
+- * 指令：0x55 0xAA 0x04 控件ID 属性高字节 属性低字节 颜色高字节 颜色低字节
+- * 属性0x0022，拆分为 0x00，0x22
+- */
+-void bsp_tjc_set_pco(uint8_t ctrl_id, uint16_t color)
+-{
+-    uint8_t buf[8] = {0x55,0xAA,0x04, ctrl_id, 0x00, 0x22, (color>>8)&0xFF, color&0xFF};
+-    HAL_UART_Transmit(&huart3, buf, sizeof(buf),100);
+-}
++/* 功能：最近一次参数检查/发送结果；返回：HAL状态；不等同于屏幕ACK。 */
++HAL_StatusTypeDef bsp_tjc_get_status(void) { return s_status; }
+--- original/MDK-ARM/BSP/TJC/TJC.h
++++ updated/MDK-ARM/BSP/TJC/TJC.h
+@@ -1,43 +1,13 @@
+ #ifndef __BSP_TJC_H
+ #define __BSP_TJC_H
+-
+ #include "stm32f1xx_hal.h"
+-
+-/* =========和陶晶驰HMI保持一致的页面编号========= */
+-#define TJC_PAGE_HOME         0      //主页
+-#define TJC_PAGE_PASSWORD     1      //密码输入页面（你现在做的键盘页面）
+-#define TJC_PAGE_UNLOCK_OK    2      //开锁成功页
+-#define TJC_PAGE_ADMIN        3      //管理员页
+-
+-/* =========函数声明========= */
+-/**
+- * @brief 串口屏初始化，上电切到密码输入页面
+- */
++/* small.HMI中已识别page0及t0；不假设不存在的管理员/解锁页面。 */
++#define TJC_PAGE_HOME 0U
++#define TJC_TEXT_CONTROL 0U
+ void bsp_tjc_init(void);
+-
+-/**
+- * @brief 切换页面
+- * @param page_id 页面编号
+- */
+ void bsp_tjc_set_page(uint8_t page_id);
+-
+-/**
+- * @brief 修改文本控件字符串
+- * @param ctrl_id 控件ID
+- * @param str 要显示的字符串
+- */
+-void bsp_tjc_show_str(uint8_t ctrl_id, char *str);
+-
+-/**
+- * @brief 清空文本
+- */
++void bsp_tjc_show_str(uint8_t ctrl_id,char *str);
+ void bsp_tjc_clear_str(uint8_t ctrl_id);
+-
+-/**
+- * @brief 修改控件pco文字颜色
+- * @param ctrl_id 文本控件ID
+- * @param color 0黑色；65535红色
+- */
+-void bsp_tjc_set_pco(uint8_t ctrl_id, uint16_t color);
+-
++void bsp_tjc_set_pco(uint8_t ctrl_id,uint16_t color);
++HAL_StatusTypeDef bsp_tjc_get_status(void);
+ #endif
+--- original/MDK-ARM/BSP/BT/BT.c
++++ updated/MDK-ARM/BSP/BT/BT.c
+@@ -4,6 +4,8 @@
+ #define BT_RX_BUF_SIZE 256U		// 缓冲区大小
+ #define BT_TX_TIMEOUT_MS 100U		//发送超时时间：100ms
+ 
++static volatile uint32_t s_errors;
++static volatile uint32_t s_dropped;
+ static uint8_t s_rx_byte;			// 中断接收存储字节
+ static volatile uint8_t s_rx_buf[BT_RX_BUF_SIZE];		// 缓冲区数组
+ static volatile uint16_t s_rx_head; //头指针
+@@ -20,13 +22,13 @@
+ {
+   s_rx_head = 0;
+   s_rx_tail = 0;
+-  HAL_UART_Receive_IT(&huart1, &s_rx_byte, 1);
++  if (HAL_UART_Receive_IT(&huart1, &s_rx_byte, 1) != HAL_OK) { s_errors++; }
+ }
+ 
+ // 蓝牙发送一个字节
+ void BT_SendByte(uint8_t byte)
+ {
+-  (void)HAL_UART_Transmit(&huart1, &byte, 1, BT_TX_TIMEOUT_MS);
++  if (HAL_UART_Transmit(&huart1, &byte, 1, BT_TX_TIMEOUT_MS) != HAL_OK) { s_errors++; }
+ }
+ 
+ // 蓝牙发送指定长度的字节
+@@ -37,7 +39,7 @@
+     return;
+   }
+ 
+-  (void)HAL_UART_Transmit(&huart1, (uint8_t *)data, len, BT_TX_TIMEOUT_MS);
++  if (HAL_UART_Transmit(&huart1, (uint8_t *)data, len, BT_TX_TIMEOUT_MS) != HAL_OK) { s_errors++; }
+ }
+ 
+ 
+@@ -107,7 +109,24 @@
+       s_rx_buf[s_rx_head] = s_rx_byte;
+       s_rx_head = next;
+     }
++    else { s_dropped++; }
+     //重新开启 UART 的接收中断，准备接收接下来的这 1 个字节，并将其保存到 s_rx_byte 变量中
+-    HAL_UART_Receive_IT(&huart1, &s_rx_byte, 1);
++    if (HAL_UART_Receive_IT(&huart1, &s_rx_byte, 1) != HAL_OK) { s_errors++; }
+   }
+ }
++
++/* 功能：读取通信错误次数；参数：无；返回：累计错误数。 */
++uint32_t BT_GetErrorCount(void) { return s_errors; }
++/* 功能：读取缓冲区满丢包次数；参数：无；返回：累计丢字节数。 */
++uint32_t BT_GetDroppedCount(void) { return s_dropped; }
++/* 功能：UART1出错后清状态并重新接收；条件：仅中断回调，不阻塞。 */
++void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
++{
++  if(huart->Instance==USART1)
++  {
++    s_errors++;
++    __HAL_UART_CLEAR_OREFLAG(huart);
++    if(HAL_UART_AbortReceive(huart)!=HAL_OK) { s_errors++; }
++    if(HAL_UART_Receive_IT(huart,&s_rx_byte,1)!=HAL_OK) { s_errors++; }
++  }
++}
+--- original/MDK-ARM/BSP/BT/BT.h
++++ updated/MDK-ARM/BSP/BT/BT.h
+@@ -10,4 +10,6 @@
+ int16_t BT_Read(void);
+ uint16_t BT_ReadBytes(uint8_t *out, uint16_t len);
+ 
++uint32_t BT_GetErrorCount(void);
++uint32_t BT_GetDroppedCount(void);
+ #endif
+--- original/MDK-ARM/BSP/OLED/oled.c
++++ updated/MDK-ARM/BSP/OLED/oled.c
+@@ -1,5 +1,6 @@
+ #include "oled.h"
+ #include "oledfont.h"
++static uint32_t s_nack_count;
+ 
+ static void OLED_I2C_Delay(void)
+ {
+@@ -43,12 +44,14 @@
+   OLED_I2C_Delay();
+ }
+ 
++/* 功能：读取第9个时钟ACK；参数/返回：无；条件：开漏和外部上拉。 */
+ void IIC_Wait_Ack(void)
+ {
+   OLED_SDIN_Set();
+   OLED_I2C_Delay();
+   OLED_SCLK_Set();
+   OLED_I2C_Delay();
++  if(HAL_GPIO_ReadPin(OLED_SDA_PORT,OLED_SDA_PIN)!=GPIO_PIN_RESET) s_nack_count++;
+   OLED_SCLK_Clr();
+   OLED_I2C_Delay();
+ }
+@@ -326,3 +329,6 @@
+ 
+   OLED_WR_Byte(0xAF,OLED_CMD);//--turn on oled panel
+ }
++
++/* 功能：读取累计NACK次数；参数：无；返回：未应答计数。 */
++uint32_t OLED_GetNackCount(void) { return s_nack_count; }
+--- original/MDK-ARM/BSP/OLED/oled.h
++++ updated/MDK-ARM/BSP/OLED/oled.h
+@@ -57,4 +57,5 @@
+ void Write_IIC_Byte(unsigned char IIC_Byte);
+ void IIC_Wait_Ack(void);
+ 
++uint32_t OLED_GetNackCount(void);
+ #endif
+--- original/MDK-ARM/BSP/FLASH/FLASH.c
++++ updated/MDK-ARM/BSP/FLASH/FLASH.c
+@@ -5,6 +5,7 @@
+   */
+ uint32_t Flash_ReadWord(uint32_t Address)
+ {
++    if (Address < FLASH_START_ADDR || Address > FLASH_END_ADDR-4U || (Address & 3U)) return 0xFFFFFFFFU;
+     return *(__IO uint32_t *)Address;
+ }
+ 
+@@ -13,6 +14,7 @@
+   */
+ uint16_t Flash_ReadHalfWord(uint32_t Address)
+ {
++    if (Address < FLASH_START_ADDR || Address > FLASH_END_ADDR-2U || (Address & 1U)) return 0xFFFFU;
+     return *(__IO uint16_t *)Address;
+ }
+ 
+@@ -21,6 +23,7 @@
+   */
+ uint32_t Flash_GetPage(uint32_t Address)
+ {
++    if (Address < FLASH_START_ADDR || Address >= FLASH_END_ADDR) return 0xFFFFFFFFU;
+     return (Address - FLASH_START_ADDR) / FLASH_PAGE_SIZE;
+ }
+ 
+@@ -30,7 +33,7 @@
+ uint8_t Flash_ErasePage(uint32_t PageAddress)
+ {
+     // 检查地址有效性
+-    if (PageAddress < FLASH_START_ADDR || PageAddress >= FLASH_END_ADDR) {
++    if (PageAddress < FLASH_START_ADDR || PageAddress >= FLASH_END_ADDR || ((PageAddress-FLASH_START_ADDR) % FLASH_PAGE_SIZE)!=0U) {
+         return FLASH_ERR_ADDR_OUT;
+     }
+ 
+@@ -39,7 +42,7 @@
+     HAL_StatusTypeDef status;
+ 
+     // 解锁 Flash
+-    HAL_FLASH_Unlock();
++    if (HAL_FLASH_Unlock() != HAL_OK) return FLASH_ERR_WRITE;
+ 
+     // 填充擦除结构体
+     EraseInitStruct.TypeErase   = FLASH_TYPEERASE_PAGES;
+@@ -50,7 +53,7 @@
+     status = HAL_FLASHEx_Erase(&EraseInitStruct, &PageError);
+ 
+     // 锁定 Flash
+-    HAL_FLASH_Lock();
++    if (HAL_FLASH_Lock() != HAL_OK) return FLASH_ERR_WRITE;
+ 
+     if (status != HAL_OK) {
+         return FLASH_ERR_ERASE;
+@@ -67,19 +70,19 @@
+     HAL_StatusTypeDef status;
+ 
+     // 检查地址有效性
+-    if (Address < FLASH_START_ADDR || Address >= FLASH_END_ADDR) {
++    if (Address < FLASH_START_ADDR || Address > FLASH_END_ADDR-4U || (Address & 3U)!=0U) {
+         return FLASH_ERR_ADDR_OUT;
+     }
+ 
+     // 解锁 Flash
+-    HAL_FLASH_Unlock();
++    if (HAL_FLASH_Unlock() != HAL_OK) return FLASH_ERR_WRITE;
+ 
+     /* STM32F1 系列实际上是按半字(16-bit)编程的，
+        但 HAL_FLASH_Program 使用 FLASH_TYPEPROGRAM_WORD 会自动处理两次16位写入 */
+     status = HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, Address, (uint64_t)Data);
+ 
+     // 锁定 Flash
+-    HAL_FLASH_Lock();
++    if (HAL_FLASH_Lock() != HAL_OK) return FLASH_ERR_WRITE;
+ 
+     if (status != HAL_OK) {
+         return FLASH_ERR_WRITE;
+@@ -97,13 +100,14 @@
+     uint32_t currentAddr = StartAddress;
+     uint16_t i;
+ 
++    if (pData == NULL || Length == 0U) return FLASH_ERR_ARGUMENT;
+     // 检查地址范围
+-    if (StartAddress < FLASH_START_ADDR || (StartAddress + Length * 4) > FLASH_END_ADDR) {
++    if (StartAddress < FLASH_START_ADDR || StartAddress >= FLASH_END_ADDR || (StartAddress & 3U)!=0U || Length > (FLASH_END_ADDR-StartAddress)/4U) {
+         return FLASH_ERR_ADDR_OUT;
+     }
+ 
+     // 解锁 Flash (在循环外解锁以提高效率)
+-    HAL_FLASH_Unlock();
++    if (HAL_FLASH_Unlock() != HAL_OK) return FLASH_ERR_WRITE;
+ 
+     for (i = 0; i < Length; i++) {
+         status = HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, currentAddr, (uint64_t)pData[i]);
+@@ -116,7 +120,7 @@
+     }
+ 
+     // 锁定 Flash
+-    HAL_FLASH_Lock();
++    if (HAL_FLASH_Lock() != HAL_OK) return FLASH_ERR_WRITE;
+ 
+     if (status != HAL_OK) {
+         return FLASH_ERR_WRITE;
+@@ -124,4 +128,3 @@
+ 
+     return FLASH_OK;
+ }
+-
+--- original/MDK-ARM/BSP/FLASH/FLASH.h
++++ updated/MDK-ARM/BSP/FLASH/FLASH.h
+@@ -24,6 +24,7 @@
+ #define FLASH_ERR_ERASE         1
+ #define FLASH_ERR_WRITE         2
+ #define FLASH_ERR_ADDR_OUT      3
++#define FLASH_ERR_ARGUMENT      4
+ 
+ /* Exported functions ------------------------------------------------------- */
+ 
+@@ -43,7 +44,7 @@
+ 
+ /**
+   * @brief  擦除指定的 Flash 页
+-  * @param  PageAddress: 该页内的任意地址 (e.g. 0x0800FC00)
++  * @param  PageAddress: 该页的起始地址，必须1KB对齐 (e.g. 0x0800FC00)
+   * @return 0: 成功, 其他: 失败代码
+   */
+ uint8_t Flash_ErasePage(uint32_t PageAddress);
+@@ -69,7 +70,7 @@
+ /**
+   * @brief  获取地址所在的页码
+   * @param  Address: Flash 地址
+-  * @return 页码 (0 - 63)
++  * @return 页码 (0 - 63)，无效地址返回0xFFFFFFFF
+   */
+ uint32_t Flash_GetPage(uint32_t Address);
+ 
+--- original/MDK-ARM/BSP/RC522/RC522.c
++++ updated/MDK-ARM/BSP/RC522/RC522.c
+@@ -1,4 +1,5 @@
+ #include "RC522.h"
++static uint8_t s_reset_timeout;
+ 
+ static void Delay_us(uint32_t us)
+ {
+@@ -39,7 +40,7 @@
+ 
+ uint8_t RC522_SPI_ReadByte( void )
+ {
+-        uint8_t n,data;
++        uint8_t n,data=0;
+         for( n=0;n<8;n++ )
+         {
+                 data<<=1;
+@@ -126,8 +127,15 @@
+   RC522_Reset_Disable();
+   Delay_us ( 1 );
+   RC522_Write_Register( CommandReg, 0x0F );
+-  while( RC522_Read_Register( CommandReg )&0x10 )
+-      ;
++  /* 复位最多等50ms；参数/返回：无；须在HAL初始化后、主循环中调用。 */
++  {
++    uint32_t start=HAL_GetTick();
++    while(RC522_Read_Register(CommandReg)&0x10)
++    {
++      if((uint32_t)(HAL_GetTick()-start)>=50U) { s_reset_timeout=1U; return; }
++    }
++    s_reset_timeout=0U;
++  }
+ 
+   Delay_us ( 1 );
+   RC522_Write_Register( ModeReg, 0x3D );
+@@ -450,3 +458,6 @@
+ 
+   return MI_OK;
+ }
++
++/* 功能：查询最近复位是否超时；参数：无；返回：1超时，0正常。 */
++uint8_t RC522_ResetTimedOut(void) { return s_reset_timeout; }
+--- original/MDK-ARM/BSP/RC522/RC522.h
++++ updated/MDK-ARM/BSP/RC522/RC522.h
+@@ -147,6 +147,7 @@
+ #define         MI_NOTAGERR           0xcc
+ #define         MI_ERR                0xbb
+ 
++uint8_t RC522_ResetTimedOut(void);
+ void RC522_Init(void);
+ 
+ void RC522_SPI_SendByte( uint8_t byte );

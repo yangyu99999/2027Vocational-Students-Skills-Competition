@@ -1,0 +1,15 @@
+# MDK Keil 编译产物
+*.o
+*.d
+*.crf
+*.lst
+*.axf
+*.hex
+*.elf
+*.uvoptx
+*.uvguix.*
+RTE/_*
+Debug/
+Release/
+# 临时文件
+*.bak
