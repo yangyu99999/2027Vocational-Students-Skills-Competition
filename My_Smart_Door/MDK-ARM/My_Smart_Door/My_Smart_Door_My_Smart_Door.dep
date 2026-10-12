@@ -1,7 +1,7 @@
 Dependencies for Project 'My_Smart_Door', Target 'My_Smart_Door': (DO NOT MODIFY !)
 CompilerVersion: 5060960::V5.06 update 7 (build 960)::.\ARMCC
 F (startup_stm32f103xb.s)(0x6ACA0AEA)(--cpu Cortex-M3 -g --apcs=interwork -I.\RTE\_My_Smart_Door-IE:\Keil\Kill5_install\32pack\ARM\CMSIS\5.9.0\CMSIS\Core\Include-IE:\Keil\Kill5_install\32pack\Keil\STM32F1xx_DFP\2.2.0\Device\Include--pd "__UVISION_VERSION SETA 539" --pd "_RTE_ SETA 1" --pd "STM32F10X_MD SETA 1" --pd "_RTE_ SETA 1"--list startup_stm32f103xb.lst --xref -o my_smart_door\startup_stm32f103xb.o --depend my_smart_door\startup_stm32f103xb.d)
-F (../Core/Src/main.c)(0x6ACA0AE9)(--c99 -c --cpu Cortex-M3 -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_My_Smart_Door-IE:\Keil\Kill5_install\32pack\ARM\CMSIS\5.9.0\CMSIS\Core\Include-IE:\Keil\Kill5_install\32pack\Keil\STM32F1xx_DFP\2.2.0\Device\Include-D__UVISION_VERSION="539" -D_RTE_ -DSTM32F10X_MD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xB-o my_smart_door\main.o --omf_browse my_smart_door\main.crf --depend my_smart_door\main.d)
+F (../Core/Src/main.c)(0x6ACCB730)(--c99 -c --cpu Cortex-M3 -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_My_Smart_Door-IE:\Keil\Kill5_install\32pack\ARM\CMSIS\5.9.0\CMSIS\Core\Include-IE:\Keil\Kill5_install\32pack\Keil\STM32F1xx_DFP\2.2.0\Device\Include-D__UVISION_VERSION="539" -D_RTE_ -DSTM32F10X_MD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xB-o my_smart_door\main.o --omf_browse my_smart_door\main.crf --depend my_smart_door\main.d)
 I (../Core/Inc/main.h)(0x6ACA0AE9)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h)(0x69D0703E)
 I (../Core/Inc/stm32f1xx_hal_conf.h)(0x6ACA0AE8)
@@ -35,6 +35,9 @@ I (../Core/Inc/i2c.h)(0x6ACA0AE7)
 I (../Core/Inc/tim.h)(0x6ACA0AE8)
 I (../Core/Inc/usart.h)(0x6ACA0AE8)
 I (../Core/Inc/gpio.h)(0x6ACA0AE7)
+I (../Core/Src/../../MDK-ARM/BSP/KEY/KEY.h)(0x69779492)
+I (../Core/Src/../../MDK-ARM/BSP/OLED/oled.h)(0x6ACB381B)
+I (../Core/Src/../../MDK-ARM/BSP/servo/servo.h)(0x6ACCB7D1)
 F (../Core/Src/gpio.c)(0x6ACB381B)(--c99 -c --cpu Cortex-M3 -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_My_Smart_Door-IE:\Keil\Kill5_install\32pack\ARM\CMSIS\5.9.0\CMSIS\Core\Include-IE:\Keil\Kill5_install\32pack\Keil\STM32F1xx_DFP\2.2.0\Device\Include-D__UVISION_VERSION="539" -D_RTE_ -DSTM32F10X_MD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xB-o my_smart_door\gpio.o --omf_browse my_smart_door\gpio.crf --depend my_smart_door\gpio.d)
 I (../Core/Inc/gpio.h)(0x6ACA0AE7)
 I (../Core/Inc/main.h)(0x6ACA0AE9)
@@ -841,7 +844,7 @@ I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h)(0x69D0703E)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h)(0x69D0703E)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h)(0x69D0703E)
 I (BSP\OLED\oledfont.h)(0x69779492)
-F (.\BSP\RC522\RC522.c)(0x6ACB3844)(--c99 -c --cpu Cortex-M3 -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_My_Smart_Door-IE:\Keil\Kill5_install\32pack\ARM\CMSIS\5.9.0\CMSIS\Core\Include-IE:\Keil\Kill5_install\32pack\Keil\STM32F1xx_DFP\2.2.0\Device\Include-D__UVISION_VERSION="539" -D_RTE_ -DSTM32F10X_MD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xB-o my_smart_door\rc522.o --omf_browse my_smart_door\rc522.crf --depend my_smart_door\rc522.d)
+F (.\BSP\RC522\RC522.c)(0x6ACB43C7)(--c99 -c --cpu Cortex-M3 -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_My_Smart_Door-IE:\Keil\Kill5_install\32pack\ARM\CMSIS\5.9.0\CMSIS\Core\Include-IE:\Keil\Kill5_install\32pack\Keil\STM32F1xx_DFP\2.2.0\Device\Include-D__UVISION_VERSION="539" -D_RTE_ -DSTM32F10X_MD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xB-o my_smart_door\rc522.o --omf_browse my_smart_door\rc522.crf --depend my_smart_door\rc522.d)
 I (BSP\RC522\RC522.h)(0x6ACB381B)
 I (../Core/Inc/main.h)(0x6ACA0AE9)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h)(0x69D0703E)
@@ -873,7 +876,7 @@ I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h)(0x69D0703E)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h)(0x69D0703E)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h)(0x69D0703E)
 F (.\BSP\SERVO\servo.c)(0x6ACB3875)(--c99 -c --cpu Cortex-M3 -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include-I.\RTE\_My_Smart_Door-IE:\Keil\Kill5_install\32pack\ARM\CMSIS\5.9.0\CMSIS\Core\Include-IE:\Keil\Kill5_install\32pack\Keil\STM32F1xx_DFP\2.2.0\Device\Include-D__UVISION_VERSION="539" -D_RTE_ -DSTM32F10X_MD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xB-o my_smart_door\servo.o --omf_browse my_smart_door\servo.crf --depend my_smart_door\servo.d)
-I (BSP\SERVO\servo.h)(0x6ACB381B)
+I (BSP\SERVO\servo.h)(0x6ACCB7D1)
 I (../Core/Inc/tim.h)(0x6ACA0AE8)
 I (../Core/Inc/main.h)(0x6ACA0AE9)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h)(0x69D0703E)

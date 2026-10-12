@@ -22,6 +22,11 @@
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
+#include "../../MDK-ARM/BSP/KEY/KEY.h"
+#include "../../MDK-ARM/BSP/OLED/oled.h"
+#include "../../MDK-ARM/BSP/servo/servo.h"
+
+
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -46,7 +51,8 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
+static uint8_t s_red_on;
+static uint8_t s_green_on;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -95,13 +101,35 @@ int main(void)
   MX_USART2_UART_Init();
   MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
-
+  KEY_Init();
+  OLED_Init();
+  HAL_GPIO_WritePin(LED_RED_GPIO_Port, LED_RED_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(LED_GRE_GPIO_Port, LED_GRE_Pin, GPIO_PIN_SET);
+  OLED_Clear();
+  OLED_ShowString(0, 0, (uint8_t *)"SW1 RED: OFF", 16);
+  OLED_ShowString(0, 2, (uint8_t *)"SW2 GREEN: OFF", 16);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+    uint8_t key = KEY_Scan();
+    if (key == 1U)
+    {
+      s_red_on = (uint8_t)!s_red_on;
+      HAL_GPIO_WritePin(LED_RED_GPIO_Port, LED_RED_Pin, s_red_on ? GPIO_PIN_RESET : GPIO_PIN_SET);
+      OLED_ShowString(0, 0, s_red_on ? (uint8_t *)"SW1 RED: ON " : (uint8_t *)"SW1 RED: OFF", 16);
+      Servo_SetAngle(&htim4,TIM_CHANNEL_3,0);
+    }
+    else if (key == 2U)
+    {
+      s_green_on = (uint8_t)!s_green_on;
+      HAL_GPIO_WritePin(LED_GRE_GPIO_Port, LED_GRE_Pin, s_green_on ? GPIO_PIN_RESET : GPIO_PIN_SET);
+      OLED_ShowString(0, 2, s_green_on ? (uint8_t *)"SW2 GREEN: ON " : (uint8_t *)"SW2 GREEN: OFF", 16);
+      Servo_SetAngle(&htim4,TIM_CHANNEL_3,180);
+    }
+    HAL_Delay(2U);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
