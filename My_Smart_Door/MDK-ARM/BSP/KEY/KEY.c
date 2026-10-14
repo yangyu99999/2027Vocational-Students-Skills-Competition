@@ -21,7 +21,7 @@ uint16_t KEY_ScanMatrix(void)
   static const uint16_t cols[4] = {COL1_Pin,COL2_Pin,COL3_Pin,COL4_Pin};
   uint16_t mask = 0U;
   uint8_t r,c;
-  volatile uint32_t settle;
+  volatile uint32_t settle;// volatile：防止编译器把空延时循环优化掉
   for (r=0U;r<4U;r++)
   {
     HAL_GPIO_WritePin(GPIOA, rows[r], GPIO_PIN_RESET);
