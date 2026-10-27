@@ -32,8 +32,8 @@
 #include "../../MDK-ARM/BSP/BEEP/BEEP.h"
 #include "../../MDK-ARM/BSP/FLASH/FLASH.h"
 #include "../../MDK-ARM/BSP/RC522/RC522.h"
+#include "../../MDK-ARM/BSP/TEMP/TEMP.h"
 #include <string.h>
-#include <math.h>
 
 /* USER CODE END Includes */
 
@@ -61,21 +61,6 @@ typedef enum
 #define ERROR_BLINK_COUNT   3U
 #define RFID_POLL_MS        150U
 #define RFID_UID_LENGTH     4U
-
-/* NTC 10K 热敏电阻模块：AO → PA1(ADC1_IN1)，模块用 3.3V 供电。
-   分压 = 板上固定电阻 + NTC，AO 取中点：
-     TEMP_NTC_TO_GND = 1 → NTC 接 GND 侧，温度升高 AO 电压下降
-     TEMP_NTC_TO_GND = 0 → NTC 接 VCC 侧，温度升高 AO 电压上升
-   验证方法：用手捏住 NTC，若温度显示反而变小，就把这个宏取反。 */
-#define TEMP_ADC_MAX        4095U
-#define TEMP_VREF_MV        3300U
-#define TEMP_FIXED_OHM      10000.0f   /* 与 NTC 串联的固定电阻，模块上一般为 10K */
-#define TEMP_NTC_R0_OHM     10000.0f   /* NTC 在 25℃ 的阻值 */
-#define TEMP_NTC_T0_K       298.15f    /* 25℃ 对应的开氏温度 */
-#define TEMP_NTC_B          3950.0f    /* B 值，常见 10K B3950 */
-#define TEMP_NTC_TO_GND     1U
-#define TEMP_SAMPLE_COUNT   8U
-#define TEMP_REFRESH_MS     1000U
 
 /* USER CODE END PD */
 
@@ -117,10 +102,6 @@ static uint8_t s_rfid_unsupported;
 static uint8_t s_rfid_uid[RFID_UID_LENGTH];
 static uint32_t s_rfid_poll_tick;
 
-static uint8_t s_temp_valid;
-static int16_t s_temp_x10;
-static uint32_t s_temp_tick;
-
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -136,8 +117,6 @@ static void ProcessDoorState(void);
 static void RFID_InitReader(void);
 static void RFID_ShowStatus(void);
 static void RFID_Process(void);
-static void Temp_Init(void);
-static void Temp_Update(void);
 static void Temp_ShowStatus(void);
 
 /* USER CODE END PFP */
@@ -212,7 +191,13 @@ int main(void)
     ProcessDoorState();
     ProcessKeyInput(KEY_Scan());
     RFID_Process();
-    Temp_Update();
+    if (Temp_Update() != 0U)
+    {
+      if (s_door_state == DOOR_LOCKED)
+      {
+        Temp_ShowStatus();   /* 只重画第一行，不清屏，不会闪 */
+      }
+    }
     HAL_Delay(2U);
   }
   /* USER CODE END 3 */
@@ -602,126 +587,19 @@ static void RFID_Process(void)
   }
 }
 
-/* ============ NTC 10K 温度采集（PA1 / ADC1_IN1） ============ */
-
-/* 功能：采 TEMP_SAMPLE_COUNT 次取平均，按 B 值公式换算成 0.1℃；
-   参数：out 存放结果（单位 0.1℃）；返回：1 正常 / 0 传感器异常 */
-static uint8_t Temp_ReadX10(int16_t *out)
-{
-  uint32_t sum = 0U;
-  uint32_t raw;
-  uint8_t i;
-  float v_mv;
-  float r_ntc;
-  float inv_t;
-  float celsius;
-  int32_t t10;
-
-  for (i = 0U; i < TEMP_SAMPLE_COUNT; i++)
-  {
-    if (HAL_ADC_Start(&hadc1) != HAL_OK)
-    {
-      return 0U;
-    }
-    if (HAL_ADC_PollForConversion(&hadc1, 5U) != HAL_OK)
-    {
-      (void)HAL_ADC_Stop(&hadc1);
-      return 0U;
-    }
-    sum += HAL_ADC_GetValue(&hadc1);
-    (void)HAL_ADC_Stop(&hadc1);
-  }
-
-  raw = sum / TEMP_SAMPLE_COUNT;
-  if ((raw <= 8U) || (raw >= (TEMP_ADC_MAX - 8U)))
-  {
-    return 0U;                                   /* 0V 或满量程：没接模块/短路 */
-  }
-
-  v_mv = ((float)raw * (float)TEMP_VREF_MV) / (float)TEMP_ADC_MAX;
-
-#if (TEMP_NTC_TO_GND != 0U)
-  /* NTC 在下臂：V = VCC*Rt/(Rf+Rt) → Rt = Rf*V/(VCC-V) */
-  if (v_mv >= ((float)TEMP_VREF_MV - 5.0f))
-  {
-    return 0U;
-  }
-  r_ntc = (TEMP_FIXED_OHM * v_mv) / ((float)TEMP_VREF_MV - v_mv);
-#else
-  /* NTC 在上臂：V = VCC*Rf/(Rt+Rf) → Rt = Rf*(VCC-V)/V */
-  r_ntc = (TEMP_FIXED_OHM * ((float)TEMP_VREF_MV - v_mv)) / v_mv;
-#endif
-
-  /* B 值方程：1/T = 1/T0 + ln(Rt/R0)/B */
-  inv_t = (1.0f / TEMP_NTC_T0_K) + (logf(r_ntc / TEMP_NTC_R0_OHM) / TEMP_NTC_B);
-  if (inv_t <= 0.0f)
-  {
-    return 0U;
-  }
-  celsius = (1.0f / inv_t) - 273.15f;
-  if ((celsius < -40.0f) || (celsius > 125.0f))
-  {
-    return 0U;                                   /* 超出量程：多半是分压方向配错 */
-  }
-
-  if (celsius >= 0.0f)
-  {
-    t10 = (int32_t)((celsius * 10.0f) + 0.5f);
-  }
-  else
-  {
-    t10 = (int32_t)((celsius * 10.0f) - 0.5f);
-  }
-  *out = (int16_t)t10;
-  return 1U;
-}
-
-/* 功能：把 0.1℃ 整数格式化成 "25.3C"/"-5.0C"/"125.0C"；参数：out 至少 8 字节；返回：无 */
-static void Temp_FormatX10(char *out)
-{
-  int32_t t10 = (int32_t)s_temp_x10;
-  uint32_t whole;
-  uint8_t pos = 0U;
-
-  if (t10 < 0)
-  {
-    out[pos++] = '-';
-    t10 = -t10;
-  }
-  whole = (uint32_t)t10 / 10U;
-  if (whole >= 100U)
-  {
-    out[pos++] = (char)('0' + (char)(whole / 100U));
-  }
-  if (whole >= 10U)
-  {
-    out[pos++] = (char)('0' + (char)((whole / 10U) % 10U));
-  }
-  out[pos++] = (char)('0' + (char)(whole % 10U));
-  out[pos++] = '.';
-  out[pos++] = (char)('0' + (char)((uint32_t)t10 % 10U));
-  out[pos++] = 'C';
-  out[pos] = '\0';
-}
+/* ============ 温度显示（采样与换算在 MDK-ARM/BSP/TEMP） ============ */
 
 /* 功能：把温度画在密码页第一行右侧（与 "PASSWORD:" 同一行）；参数：无；返回：无 */
 static void Temp_ShowStatus(void)
 {
   char line[17];
-  char val[8];
+  char val[TEMP_FORMAT_SIZE];
   uint8_t i;
   uint8_t len;
   uint8_t start;
 
   RFID_PutText(line, "PASSWORD:");
-  if (s_temp_valid != 0U)
-  {
-    Temp_FormatX10(val);
-  }
-  else
-  {
-    (void)strcpy(val, "NO NTC");
-  }
+  Temp_Format(val);
   len = (uint8_t)strlen(val);
   start = (uint8_t)(16U - len);            /* 右对齐到最右一列 */
   if (start < 10U)
@@ -733,56 +611,6 @@ static void Temp_ShowStatus(void)
     line[start + i] = val[i];
   }
   OLED_ShowString(0U, 0U, (uint8_t *)line, 16U);
-}
-
-/* 功能：温度初始化：改长采样时间、校准、先读一次；参数：无；返回：无 */
-static void Temp_Init(void)
-{
-  ADC_ChannelConfTypeDef cfg;
-
-  s_temp_valid = 0U;
-  s_temp_x10 = 0;
-  s_temp_tick = HAL_GetTick();
-
-  /* 10K+10K 分压源阻抗约 5k，CubeMX 生成的 1.5 周期采样偏短，改为 55.5 周期。
-     在代码里覆盖，CubeMX 重新生成工程也不会丢。 */
-  cfg.Channel = ADC_CHANNEL_1;
-  cfg.Rank = ADC_REGULAR_RANK_1;
-  cfg.SamplingTime = ADC_SAMPLETIME_55CYCLES_5;
-  (void)HAL_ADC_ConfigChannel(&hadc1, &cfg);
-
-  (void)HAL_ADCEx_Calibration_Start(&hadc1);      /* F1 必须先校准，否则读数整体偏移 */
-
-  if (Temp_ReadX10(&s_temp_x10) != 0U)
-  {
-    s_temp_valid = 1U;
-  }
-}
-
-/* 功能：1 秒刷新一次温度，门锁定时同步更新屏上数值；参数：无；返回：无 */
-static void Temp_Update(void)
-{
-  uint32_t now = HAL_GetTick();
-
-  if ((uint32_t)(now - s_temp_tick) < TEMP_REFRESH_MS)
-  {
-    return;
-  }
-  s_temp_tick = now;
-
-  if (Temp_ReadX10(&s_temp_x10) == 0U)
-  {
-    s_temp_valid = 0U;
-  }
-  else
-  {
-    s_temp_valid = 1U;
-  }
-
-  if (s_door_state == DOOR_LOCKED)
-  {
-    Temp_ShowStatus();     /* 只重画这一行，不清屏，不会闪 */
-  }
 }
 
 /* USER CODE END 4 */
