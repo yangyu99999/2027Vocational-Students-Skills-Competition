@@ -17,12 +17,13 @@ static void TJC_Send(const char *command)
   s_status=HAL_UART_Transmit(&huart3,buf,(uint16_t)len,120U);
 }
 /* 功能：切至small.HMI的page0；参数/返回：无；条件：屏幕启动完成后调用。 */
-void bsp_tjc_init(void) { bsp_tjc_set_page(TJC_PAGE_HOME); }
+void bsp_tjc_init(void) { bsp_tjc_set_page(TJC_PAGE_PASSWORD); }
 /* 功能：切页；参数：仅支持当前HMI的0页；返回：状态由get_status获取。 */
 void bsp_tjc_set_page(uint8_t page_id)
 {
-  if(page_id!=0U) { s_status=HAL_ERROR; return; }
-  TJC_Send("page 0");
+  if(page_id==TJC_PAGE_PASSWORD) TJC_Send("page p1");
+  else if(page_id==TJC_PAGE_HOME) TJC_Send("page 0");
+  else s_status=HAL_ERROR;
 }
 /* 功能：在t0显示字符串；ctrl_id=0，兼容层不把数值ID猜作控件名。
  * 参数：最多64个ASCII字符；拒绝引号、反斜线和控制字符以防破坏命令。 */
@@ -48,4 +49,16 @@ void bsp_tjc_set_pco(uint8_t ctrl_id,uint16_t color)
   TJC_Send(command);
 }
 /* 功能：最近一次参数检查/发送结果；返回：HAL状态；不等同于屏幕ACK。 */
+/* 功能：模拟p1页面SW1..SW16一次按下；参数：矩阵键值1..16；返回：无。 */
+void bsp_tjc_key_click(uint8_t key)
+{
+  char command[32];
+  if(key==0U || key>16U) { s_status=HAL_ERROR; return; }
+  (void)snprintf(command,sizeof(command),"click p1,SW%u,1",(unsigned int)key);
+  TJC_Send(command);
+  if(s_status!=HAL_OK) return;
+  (void)snprintf(command,sizeof(command),"click p1,SW%u,0",(unsigned int)key);
+  TJC_Send(command);
+}
+
 HAL_StatusTypeDef bsp_tjc_get_status(void) { return s_status; }

@@ -3,7 +3,6 @@
 "my_smart_door\main.o"
 "my_smart_door\gpio.o"
 "my_smart_door\adc.o"
-"my_smart_door\dma.o"
 "my_smart_door\i2c.o"
 "my_smart_door\tim.o"
 "my_smart_door\usart.o"
