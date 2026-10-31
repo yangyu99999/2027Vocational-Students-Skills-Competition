@@ -703,6 +703,11 @@
               <FilePath>.\BSP\BT\BT.c</FilePath>
             </File>
             <File>
+              <FileName>EEPROM.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\BSP\EEPROM\EEPROM.c</FilePath>
+            </File>
+            <File>
               <FileName>FLASH.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\BSP\FLASH\FLASH.c</FilePath>
@@ -736,6 +741,31 @@
               <FileName>TJC.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\BSP\TJC\TJC.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>APP</GroupName>
+          <Files>
+            <File>
+              <FileName>CardStore.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\APP\CardStore\CardStore.c</FilePath>
+            </File>
+            <File>
+              <FileName>Door.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\APP\Door\Door.c</FilePath>
+            </File>
+            <File>
+              <FileName>Rfid.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\APP\Rfid\Rfid.c</FilePath>
+            </File>
+            <File>
+              <FileName>Ui.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\APP\Ui\Ui.c</FilePath>
             </File>
           </Files>
         </Group>

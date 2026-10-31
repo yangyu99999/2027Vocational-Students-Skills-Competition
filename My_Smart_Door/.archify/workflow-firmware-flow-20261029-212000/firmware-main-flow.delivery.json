@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "bf477791-f4ac-406e-9e25-89fbd6bd697a",
+  "status": "current",
+  "command": "deliver",
+  "type": "workflow",
+  "input": "D:\\Jiangsu Vocational Students Skills Competition\\My_Smart_Door\\.archify\\workflow-firmware-flow-20261029-212000\\firmware-main-flow.candidate-b.json",
+  "output": "D:\\Jiangsu Vocational Students Skills Competition\\My_Smart_Door\\.archify\\workflow-firmware-flow-20261029-212000\\firmware-main-flow.html",
+  "specification": {
+    "sha256": "218c4b8ba48e947ee910bc42616a27064d3586cf26e71c231a46f57b9d3a895e",
+    "bytes": 6017
+  },
+  "artifact": {
+    "sha256": "cc6acc0d10a99276d785165af232508b5fa4269093ab9c11faa2c6d269668bd8",
+    "bytes": 757566
+  }
+}

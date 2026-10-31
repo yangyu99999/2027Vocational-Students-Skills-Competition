@@ -1,0 +1,181 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "智能门锁固件运行流程",
+    "locale": "zh-CN",
+    "subtitle": "STM32F103C8T6 · 裸机 · Core/Src/main.c",
+    "output": ".archify/workflow-firmware-flow-20261029-212000/firmware-main-flow.html",
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "git@github.com:yangyu99999/2027Vocational-Students-Skills-Competition.git",
+      "provider": "github",
+      "link_mode": "local-only",
+      "revision": "e88e49757bc51b15ce84e0a711963421f0cb95a5"
+    }
+  },
+  "lanes": [
+    { "id": "boot", "label": "上电与时钟" },
+    { "id": "init", "label": "外设与模块初始化" },
+    { "id": "run", "label": "主循环" },
+    { "id": "task", "label": "循环内任务" },
+    { "id": "fault", "label": "启动失败", "variant": "exception" }
+  ],
+  "phases": [
+    { "id": "p_boot", "label": "复位启动", "fromCol": 0, "toCol": 1 },
+    { "id": "p_init", "label": "初始化", "fromCol": 2, "toCol": 3, "variant": "emphasis" },
+    { "id": "p_run", "label": "持续运行", "fromCol": 4, "toCol": 5, "variant": "dashed" }
+  ],
+  "groups": [
+    { "id": "g_loop", "label": "每 2ms 一轮", "lane": "run", "fromCol": 4, "toCol": 5, "variant": "emphasis" }
+  ],
+  "mainPath": ["reset", "clock", "periph", "bsp", "home", "loop", "tasks"],
+  "nodes": [
+    {
+      "id": "reset",
+      "lane": "boot",
+      "col": 0,
+      "type": "external",
+      "label": "上电复位",
+      "sublabel": "BOOT0 接地启动",
+      "sources": [
+        { "path": "My_Smart_Door/Core/Src/main.c", "line": 133, "end_line": 143 }
+      ]
+    },
+    {
+      "id": "clock",
+      "lane": "boot",
+      "col": 1,
+      "type": "backend",
+      "label": "HAL_Init 与时钟",
+      "sublabel": "HSE 8MHz ×9 = 72MHz",
+      "sources": [
+        { "path": "My_Smart_Door/Core/Src/main.c", "line": 143, "end_line": 150 },
+        { "path": "My_Smart_Door/Core/Src/main.c", "line": 210, "end_line": 250 }
+      ]
+    },
+    {
+      "id": "periph",
+      "lane": "init",
+      "col": 2,
+      "type": "backend",
+      "label": "外设初始化",
+      "sublabel": "GPIO/TIM4/UART/ADC1",
+      "sources": [
+        { "path": "My_Smart_Door/Core/Src/main.c", "line": 157, "end_line": 163 }
+      ]
+    },
+    {
+      "id": "bsp",
+      "lane": "init",
+      "col": 3,
+      "type": "messagebus",
+      "label": "BSP 模块初始化",
+      "sublabel": "按键/OLED/读卡/测温",
+      "sources": [
+        { "path": "My_Smart_Door/Core/Src/main.c", "line": 166, "end_line": 172 },
+        { "path": "My_Smart_Door/MDK-ARM/BSP/KEY/KEY.c", "line": 8, "end_line": 20 },
+        { "path": "My_Smart_Door/MDK-ARM/BSP/RC522/RC522.c", "line": 13, "end_line": 30 }
+      ]
+    },
+    {
+      "id": "home",
+      "lane": "init",
+      "col": 4,
+      "type": "frontend",
+      "label": "舵机关门 + 主页",
+      "sublabel": "转 180° 并显示密码页",
+      "sources": [
+        { "path": "My_Smart_Door/Core/Src/main.c", "line": 173, "end_line": 180 },
+        { "path": "My_Smart_Door/Core/Src/main.c", "line": 274, "end_line": 280 }
+      ]
+    },
+    {
+      "id": "loop",
+      "lane": "run",
+      "col": 4,
+      "type": "backend",
+      "label": "while(1) 主循环",
+      "sublabel": "每 2ms 一轮",
+      "sources": [
+        { "path": "My_Smart_Door/Core/Src/main.c", "line": 186, "end_line": 202 }
+      ]
+    },
+    {
+      "id": "tasks",
+      "lane": "task",
+      "col": 5,
+      "type": "backend",
+      "label": "循环内四件事",
+      "sublabel": "状态机→读键→读卡→测温",
+      "sources": [
+        { "path": "My_Smart_Door/Core/Src/main.c", "line": 191, "end_line": 200 }
+      ]
+    },
+    {
+      "id": "servo_fail",
+      "lane": "fault",
+      "col": 5,
+      "type": "security",
+      "label": "SERVO_ERROR",
+      "sublabel": "报错后死等复位",
+      "sources": [
+        { "path": "My_Smart_Door/Core/Src/main.c", "line": 285, "end_line": 294 },
+        { "path": "My_Smart_Door/Core/Src/main.c", "line": 173, "end_line": 180 }
+      ]
+    }
+  ],
+  "edges": [
+    { "id": "e_reset_clock", "from": "reset", "to": "clock", "variant": "default" },
+    { "id": "e_clock_periph", "from": "clock", "to": "periph", "variant": "default" },
+    { "id": "e_periph_bsp", "from": "periph", "to": "bsp", "variant": "default" },
+    { "id": "e_bsp_home", "from": "bsp", "to": "home", "variant": "default" },
+    {
+      "id": "e_home_loop",
+      "from": "home",
+      "to": "loop",
+      "variant": "emphasis",
+      "route": "straight",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    { "id": "e_loop_tasks", "from": "loop", "to": "tasks", "variant": "default" },
+    {
+      "id": "e_tasks_loop",
+      "from": "tasks",
+      "to": "loop",
+      "variant": "dashed",
+      "role": "return",
+      "route": "return-left",
+      "label": "下一轮"
+    },
+    {
+      "id": "e_home_fail",
+      "from": "home",
+      "to": "servo_fail",
+      "variant": "security",
+      "role": "error",
+      "label": "舵机失败"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "启动阶段",
+      "items": [
+        "顺序固定：HAL 与时钟 → 外设 → BSP 模块 → 舵机关门并显示密码页",
+        "读卡器自检失败只置标志位，不阻止密码开门"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "运行阶段",
+      "items": [
+        "主循环无中断调度，四件事按序阻塞执行，末尾 HAL_Delay(2) 定节拍",
+        "温度每 1s 采样一次，只有门锁态才重画第一行"
+      ]
+    }
+  ]
+}
